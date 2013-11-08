@@ -1,0 +1,150 @@
+/* 
+ * File:   main.cpp
+ * Author: Andrew P Bergeron & Grant Thomas
+ *
+ * Created on October 24, 2013, 2:55 PM
+ */
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctime> 
+#include <iostream>
+
+using namespace std;
+
+void radixSort(int *data, int n) {
+    int bucket[512], dummy[n], max, i, index, lsd = 1;
+    max = 0;
+    
+    /* find the largest key */
+    for (i = 0; i < n; i++) {
+        if (data[i] > max)
+            max = data[i];
+    }
+    while (max / lsd > 0) {
+        memset(bucket, 0, sizeof(int) * 10);
+        memset(dummy, 0 , sizeof(int) * n);
+        /*
+         * lsd - indicates the significant bit that we
+         `* handle currently.  Update the counters for the
+         * elements that has same(current) significant
+         * bit into the bucket. 
+         */
+        for (i = 0; i < n; i++) {
+            index = (data[i] / lsd) % 10;
+            bucket[index]++;
+        }
+        
+        /* update all the buckets. */
+        
+        for (i = 1; i < 256; i++)
+            bucket[i] = bucket[i] + bucket[i-1];
+        
+        
+        /* sort the elements based on current significant digit */
+        for (i = n-1; i >= 0; i--) {
+            index = (data[i] / lsd) % 10;
+            index = --bucket[index];
+            dummy[index] = data[i];
+        }
+        
+        /* update original with dummy */
+        for (i = 0; i < n; i++)
+            data[i] = dummy[i];
+        lsd = lsd * 10;
+    }
+}
+
+int main() {
+    
+    // Create array of 10^3 random numbers
+    int random_numbers1[1000];
+    srand((unsigned)time(NULL));
+    for (int i = 0; i < 999; i++) {
+        random_numbers1[i] = 1+ rand() % 65535;
+    }
+    
+    std::clock_t start;
+    double duration;
+    start = clock();
+
+    radixSort(random_numbers1, 999);
+    
+    duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+    
+    cout << endl;
+    cout << "Time for 10^3 -->" << duration <<" sec. \n";
+
+    
+    
+    
+    
+    
+    
+    
+    // Create array of 10^4 random numbers
+    int random_numbers2[10000];
+    srand((unsigned)time(NULL));
+    for (int i = 0; i < 9999; i++) {
+        random_numbers2[i] = 1+ rand() % 65535;
+    }
+    
+    start = clock();
+    
+    radixSort(random_numbers2, 9999);
+    
+    duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+
+    cout << endl;
+    cout << "Time for 10^4 -->" << duration <<" sec. \n";
+    
+    
+    
+    
+    
+    
+    
+    // Create array of 10^5 random numbers
+    int random_numbers3[100000];
+    srand((unsigned)time(NULL));
+    for (int i = 0; i < 99999; i++) {
+        random_numbers3[i] = 1+ rand() % 65535;
+    }
+    
+    start = clock();
+    
+    radixSort(random_numbers3, 99999);
+    
+    duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+    
+    cout << endl;
+    cout << "Time for 10^5 -->" << duration <<" sec. \n";
+    
+    
+    
+    
+    
+    
+    
+    
+    // Create array of 10^6 random numbers
+    int random_numbers4[1000000];
+    srand((unsigned)time(NULL));
+    for (int i = 0; i < 999999; i++) {
+        random_numbers4[i] = 1+ rand() % 65535;
+    }
+    
+    start = clock();
+    
+    radixSort(random_numbers4, 99999);
+    
+    duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+    
+    cout << endl;
+    cout << "Time for 10^6 -->" << duration <<" sec. \n";
+    
+    
+    return 0;
+}
