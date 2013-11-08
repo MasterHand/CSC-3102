@@ -1,0 +1,102 @@
+/* 
+ * File:   main.cpp
+ * Author: Andrew P Bergeron & Grant Thomas
+ *
+ * Created on October 23, 2013, 2:55 PM
+ */
+
+
+#include <stdio.h>      
+#include <stdlib.h>
+#include <cstdlib> 
+#include <ctime> 
+#include <iostream>
+
+
+using namespace std;
+
+int compare (const void * a, const void * b)
+{
+    return ( *(int*)a - *(int*)b );
+}
+
+int main(int argc, char** argv) {
+    
+    // Create array of 10^3 random numbers
+    int random_numbers1[1000];
+    srand((unsigned)time(NULL));
+    for (int i = 0; i < 999; i++) {
+        random_numbers1[i] = 1 + rand() % 65535;
+    }
+    
+    std::clock_t start;
+    double duration;
+    start = std::clock();
+
+    qsort (random_numbers1, 1000, sizeof(int), compare);
+    duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+    cout << endl;
+    cout << "Time for 10^3 -->" << duration <<" sec. \n";
+    
+    
+    
+    
+    
+    
+    
+    // Create array of 10^4 random numbers
+    int random_numbers2[10000];
+    srand((unsigned)time(NULL));
+    for (int i = 0; i < 9999; i++) {
+        random_numbers2[i] = 1 + rand() % 65535;
+    }
+    
+    start = std::clock();
+    
+    qsort (random_numbers2, 10000, sizeof(int), compare);
+    duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+    cout << endl;
+    cout << "Time for 10^4 -->" << duration <<" sec. \n";
+    
+    
+    
+    
+    
+    
+    
+    // Create array of 10^5 random numbers
+    int random_numbers3[100000];
+    srand((unsigned)time(NULL));
+    for (int i = 0; i < 99999; i++) {
+        random_numbers3[i] = 1 + rand() % 65535;
+    }
+    
+    start = std::clock();
+    
+    qsort (random_numbers3, 100000, sizeof(int), compare);
+    duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+    cout << endl;
+    cout << "Time for 10^5 -->" << duration <<" sec. \n";
+    
+    
+    
+    
+    
+    // Create array of 10^6 random numbers
+    int random_numbers4[1000000];
+    srand((unsigned)time(NULL));
+    for (int i = 0; i < 999999; i++) {
+        random_numbers4[i] = 1 + rand() % 65535;
+    }
+    
+    start = std::clock();
+    
+    qsort (random_numbers4, 1000000, sizeof(int), compare);
+    duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+    cout << endl;
+    cout << "Time for 10^6 -->" << duration <<" sec. \n";
+    
+    
+    
+    return 0;
+}
