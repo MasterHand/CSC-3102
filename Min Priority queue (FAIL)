@@ -1,0 +1,84 @@
+/*
+ * File:   kary.cpp
+ * Author: andrewpbergeron and Grant Thomas
+ *
+ * Created on November 5, 2013, 10:37 AM
+ */
+
+#include <cstdlib>
+#include <queue>
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <algorithm>
+#include <fstream>
+#include <sstream>
+#include <queue>
+#include <functional>
+
+using namespace std;
+
+struct compare
+{
+    bool operator()(const int& l, const int& r)
+    {
+        return l > r;
+    }
+};
+
+/*
+void insert(data, Q){
+    Q.push(data);
+};
+*/
+
+
+int main()
+{
+    priority_queue<int,vector<int>, greater<int> > Q;
+    
+    //std::clock_t start;
+    //double duration;
+    //start = std::clock();
+    string command;
+    string data;
+    
+    ofstream myfile;
+    myfile.open("outfile.txt");
+    
+    ifstream infile;
+    infile.open("karyHeap-input.txt");
+    
+    myfile<<"-------------------REPORT-------------------"<<endl;
+    myfile<<endl;
+    while (!infile.eof()){
+        
+        getline(infile,command);
+        int i = command.find_first_of(' ');
+        int j = command.find_first_of('\n');
+        data = command.substr(i+1,j);
+        command = command.substr(0,i);
+        
+        
+        if (!(command.compare("IN"))){
+            //string str = data;
+            //int dataStringToint;
+            //istringstream ( str ) >> dataStringToint;
+            //Q.push(dataStringToint);
+            cout << command<<" "<<data<<endl;
+
+        }
+        
+        
+        if (!(command.compare("EX"))){
+            //cout << Q.top() << endl;
+            //Q.pop();
+            cout << command;
+            
+        }
+    }
+
+    
+    
+return 0;
+};
