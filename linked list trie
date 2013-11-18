@@ -1,0 +1,202 @@
+/* 
+ * File:   main.cpp
+ * Author: andrewpbergeron
+ *
+ * Created on November 12, 2013, 5:22 PM
+ */
+
+#include <cstdlib>
+#include <fstream>
+#include <string>
+#include <iostream>
+#include <vector>
+#include <cctype>
+using namespace std;
+
+/*
+ * 
+ */
+
+class trie
+{
+private:
+    struct node 
+    {
+        char character; //char of specfic node
+        bool eow;       //end of word
+        int prefixes;   //indicates how many words have that prefix
+        node * child[26]; //All children of root reference
+    } *root;
+    
+    void truncate_node(node*); //delete node and subnodes
+    void delete_node(node*);   //delete node if prefix is 1
+    
+public:
+    trie();       //constructs the trie
+    ~trie();     //deconstructs the tree 
+    
+    void insert(char *);    //  Construct trie --> insert word --> search word
+    bool search(char*);
+};
+
+
+
+trie::trie() //CONSTRUCT TRIE
+{
+    root = new node();
+    root->character = '\0';   //String null terminator. marks end of string
+    root->prefixes = 0;
+    root->eow = false;
+    
+    for (int i=0; i < 26; i++)
+    {
+        root->child[i] = NULL;    //builds 26 null children under the root
+    }
+}
+
+trie::~trie()        //DECONSTRUCT TREE
+{
+    truncate_node(root);    //deconstructor function name of the trie
+}
+
+
+void trie::truncate_node(node* n)
+{
+    for (int i; i<26; i++)
+    {
+        if (n->child[i] !NULL)
+        {
+            truncate_node(n->child[i]);  //function to delete nodes and subnodes
+        }                                //deconstructs tree
+    }
+    delete n;
+}           
+
+
+void trie::insert(char* s)  //insert char at memory location s
+{
+    node *t = root;
+    while (*s != '\0')    //while memory location is not at end of string
+    {
+        int c = toUpper(*s) - 'A';   //remove all cases of sensitive errors
+        if (t->child[c] == NULL)     
+        {
+            node *n = new node();  //first child will be NULL in the EMPTY trie
+            n->character = *s;     //create new node, char location and prefix
+            n->eow = false;
+            n->prefixes = 1;
+            
+            for(int i =0; i < 26; i++)
+            {
+                    n->child[i] = NULL;
+            }
+        
+        /*after the trie inserts the 1st char at level prefix 1, creates new
+         node  and adds new level to be inserted         
+          */
+        
+        t->child[c] = n;     //empty node location
+        t=n;
+    }
+        else 
+        {
+            t = t->child[c];   //else  if t->child is not NULL
+            t->prefix++;
+        }
+        s++;                  
+    }
+    t->eow = true;        //end of char string is true, insert next word
+}
+
+
+
+bool trie:: search(char *s)
+{
+    node *t = root;
+    while (*s != '\0')      /*while the first char is the word to be 
+                              searched is not at the end of string*/
+    {
+        int c = toUpper(*s) - 'A';
+        
+        if (t->child[c] == NULL)   //root ->child at location [c]   
+        {
+            return false;
+        }
+        else
+        {
+            t=t->child[c];  //root pointer = root -> child at location [c]]
+        }
+        s++;               //move to next level and search next character
+    }
+    if (t->eow == true)     //if 't' is pointing at the end of string location
+        return true;
+    else
+        return false;
+}
+
+
+int main()
+{
+    trie LLtrie;
+    char *s[] = {'array, of, the, words, to, be, inserted'};
+    
+    for (int =0; i < sizeof(s)/sizeof(*s); i++)
+    {
+        LLtrie.insert(s[i]);
+    }
+
+string search;
+cout << "type a word to search" << endl;
+cin >> search;
+
+for (int n=0; n < 7; n++)
+{
+    if (search == s[n])
+    {
+        cout << s[n] << " was found" << endl;
+    }
+    else
+        cout << s[n] << "not found" << endl;
+}
+    
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+/*int main() {
+    
+    ifstream file;
+    
+    vector <string> array;
+    
+    string line;
+    
+    file.open("1000Words.txt");
+    while (!file.eof())
+    {    
+    getline(file, line, '\0');
+    
+    cout << line << endl;
+    
+    array.push_back(line);
+    
+    file.close();
+    }
+    
+    cout << line[] << endl;
+    
+  
+
+    return 0;
+}
+
+*/
